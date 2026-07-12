@@ -15,7 +15,7 @@ def success_response(
 ):
     message = SuccessMessageResponse(status=status_code, msg=msg, data=data)
 
-    return JSONResponse(status_code=status_code, content=message.model_dump())
+    return JSONResponse(status_code=status_code, content=message.model_dump(mode="json"))
 
 
 # error_response
@@ -26,4 +26,4 @@ def error_response(
 ):
     message = ErrorMessageResponse(status=status_code, msg=msg, data=data)
 
-    return JSONResponse(status_code=status_code, content=message.model_dump())
+    return JSONResponse(status_code=status_code, content=message.model_dump(mode="json"))

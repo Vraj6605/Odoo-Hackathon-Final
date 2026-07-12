@@ -3,7 +3,7 @@ from app.schema.user import RefreshTokenRequestData
 from fastapi import APIRouter, BackgroundTasks, Depends, Request
 from sqlalchemy.orm import Session
 
-from app.core.dependecy import current_user
+from app.core.dependecy import current_user, RoleCheck
 from app.core.logger import get_logger
 from app.core.message import LoggerMessage
 from app.db.session import get_db
@@ -22,7 +22,7 @@ logger = get_logger(__name__)
 router = APIRouter(prefix="/users", tags=["Authentication"])
 
 
-@router.post("/signup", summary="Register a new user")
+@router.post("/signup", summary="Register a new user", dependencies=[Depends(RoleCheck(["SUPER_ADMIN"]))])
 async def signup(
     payload: UserRegistration, request: Request, db: Session = Depends(get_db)
 ):

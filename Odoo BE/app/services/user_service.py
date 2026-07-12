@@ -114,11 +114,11 @@ class UserService:
                 email, full_name, user_data.get("otp"), user_data.get("otp_expiry")
             )
 
-            # Find Roles
-            role_detail = self.role_repo.get_by_field("role_name", DEFAULT_ROLE_NAME)
+            # Find Roles by ID
+            role_detail = self.role_repo.get(payload.role_id)
 
             if not role_detail:
-                logger.error(LoggerMessage.REGISTER_USER_ROLE_NOT_FOUND.format(role_name=DEFAULT_ROLE_NAME))
+                logger.error(f"register_user: Role ID '{payload.role_id}' not found in database")
                 raise HTTPException(
                     status_code=http_status.HTTP_400_BAD_REQUEST,
                     detail=ErrorMessage.ROLE_NOT_FOUND,
