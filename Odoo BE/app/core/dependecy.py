@@ -47,13 +47,10 @@ def current_user(request: Request, db: Session = Depends(get_db)):
 
 # Note: We need to take list of roles from the dependecy so handle that using class
 class RoleCheck:
-    # Take Parameter from the Dependecy
-    def __init__(self, roles: list[str], db: Session = Depends(get_db)):
-        self.allowed_roles = roles
-        self.db = db
+    def __init__(self, roles: list[str]):
+        self.allowed_roles = [r.strip().upper() for r in roles]
 
-    # Then Handle role checking logic for current user
-    def __call__(self, request: Request):
+    def __call__(self, request: Request, db: Session = Depends(get_db)):
         payload = validate_token(request)
 
         # Check for role_id in payload
@@ -66,11 +63,20 @@ class RoleCheck:
             )
 
         # Check In Role Table for given role_id and fetch role_name
-        role_repo = RoleRepository(self.db)
+        role_repo = RoleRepository(db)
         role_detail = role_repo.get(role_id)
+        if not role_detail:
+            raise HTTPException(
+                status_code=http_status.HTTP_401_UNAUTHORIZED,
+                detail=ErrorMessage.UNAUTHORIZED_ACCESS,
+            )
 
         # Extract Role Name from role_detail
-        role_name = (role_detail.role_name).strip()
+        role_name = (role_detail.role_name).strip().upper()
+
+        # SUPER_ADMIN has access to all APIs
+        if role_name == "SUPER_ADMIN":
+            return payload
 
         # Check if current role is in Allowed Roles for API
         if role_name not in self.allowed_roles:

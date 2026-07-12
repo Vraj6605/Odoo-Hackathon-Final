@@ -6,7 +6,16 @@ This File Give All Static API Messages
 class SuccessMessage:
     SERVER_HEALTHY = "Server is Healthy!"
     RESPONSE_FETCHED_SUCCESSFULLY = "Response Fetched Successfully"
-    
+    USER_REGISTERED_SUCCESSFULLY = "User Registered Successfully!"
+    USER_VERIFICATION_EMAIL_SEND = "User Verification Email Sent"
+    USER_NOT_FOUND = "User Not Found!"
+    USER_OTP_VERIFIED_SUCCESSFULLY = "User Verified Successfully!"
+    USER_LOGIN_SUCCESSFULLY = "User Login Successfully"
+    PASSWORD_RESET_SUCCESSFULLY = "User Password Reset Successfully"
+    ALREADY_SENT_RESET_PASSWORD_LINK = (
+        "Already Sent reset password Link, Please Check Your Inbox"
+    )
+    TOKEN_REFRESHED_SUCCESSFULLY = "Access Token Refreshsed Successfully"
 
 
 class ErrorMessage:

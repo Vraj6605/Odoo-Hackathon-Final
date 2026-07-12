@@ -9,6 +9,7 @@ class UserRegistration(BaseModel):
     last_name: str = Field(..., description="Last Name of the User ")
     email: EmailStr = Field(..., description="Email of user")
     password: str = Field(..., description="Password of user account")
+    role_id: str = Field(..., description="Role ID of user being created")
 
     # We Convert Plain text to Hash text
     @field_validator("password", mode="after")
