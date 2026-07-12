@@ -1,0 +1,26 @@
+# Byte-compiled / optimized / DLL files
+__pycache__/
+*.py[cod]
+*$py.class
+
+# Virtual Environments
+.venv/
+venv/
+env/
+ENV/
+
+# IDE / Editors
+.vscode/
+.idea/
+
+# Environment / Sensitive / Secure Files
+.env
+.env.dev
+.env.prod
+*.env
+firebase-credentials.json
+*-credentials.json
+*.pem
+*.key
+*.cert
+secrets.json
