@@ -4,6 +4,7 @@ from fastapi import FastAPI, HTTPException
 from fastapi.responses import HTMLResponse
 
 from app.api.routes import app_router
+from app.api.analytics_routes import router as analytics_router
 from app.common.utils import generate_otp
 from app.core.config import get_settings
 from app.core.exception import ServerException
@@ -74,6 +75,7 @@ app.add_exception_handler(ServerException, server_exception_handler)
 
 # Add App Routes
 app.include_router(app_router, prefix="/api/v1")
+app.include_router(analytics_router)
 
 
 # Health API
