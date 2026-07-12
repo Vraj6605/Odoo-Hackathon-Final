@@ -1,0 +1,89 @@
+from pydantic import BaseModel, ConfigDict, EmailStr, Field, field_validator
+from typing import Optional
+from app.core.hash import password_hash
+
+
+# API: User Registration
+class UserRegistration(BaseModel):
+    first_name: str = Field(..., description="First name of the User")
+    last_name: str = Field(..., description="Last Name of the User ")
+    email: EmailStr = Field(..., description="Email of user")
+    password: str = Field(..., description="Password of user account")
+
+    # We Convert Plain text to Hash text
+    @field_validator("password", mode="after")
+    def hash_password(v):
+        return password_hash(v)
+
+class UserRegistrationResponse(BaseModel):
+    id: str
+    first_name: str
+    last_name: str
+    email: str
+    is_verified: bool
+    role_id: str
+
+    model_config = ConfigDict(from_attributes=True)
+
+# API: User OTP verification
+class UserOtpVerify(BaseModel):
+    otp: int
+    user_id: str
+
+class UserOtpVerifyResponse(BaseModel):
+    email: str
+    id: str
+    is_verified: bool
+    is_active: bool
+
+    model_config = ConfigDict(from_attributes=True)
+
+# API: User Login
+class UserLogin(BaseModel):
+    email: EmailStr
+    password: str
+    fcm_token: Optional[str] = None
+
+class UserInfo(BaseModel):
+    id: str
+    first_name: str
+    last_name: str
+    email: str
+    is_active: bool
+    is_verified: bool
+    is_deleted: bool
+    role_id: str
+
+    model_config = ConfigDict(from_attributes=True)
+
+class UserLoginResponse(BaseModel):
+    access_token: str
+    refresh_token: str
+    user: UserInfo
+
+# API: Password Reset 
+class ResetPassword(BaseModel):
+    old_password: str
+    new_password: str
+
+# API: Forgot Password
+class UserForgotRequest(BaseModel):
+    email: EmailStr
+
+# API: Forgot Password
+class UserForgotPassword(BaseModel):
+    email: str
+
+# API: Validate Forgot Password
+class ValidateUserForgotPassword(BaseModel):
+    token: str
+    new_password: str
+
+# API: Refresh Token 
+class RefreshTokenRequestData(BaseModel):
+    refresh_token: str
+
+# API: Refresh Token Response 
+class RefreshTokenResponse(BaseModel):
+    access_token: str
+    refresh_token: str
