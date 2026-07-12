@@ -129,3 +129,34 @@ async def refresh_token(
     response = await user_service.refresh_token(token)
     logger.info(LoggerMessage.API_REFRESH_TOKEN_SUCCESS)
     return response
+
+
+@router.get("/me", summary="Get current logged-in user profile")
+async def get_current_profile(
+    request: Request,
+    current_user=Depends(current_user),
+    db: Session = Depends(get_db)
+):
+    """
+    Retrieve details of the currently authenticated user.
+    """
+    from app.core.response import success_response
+    from app.db.models.user import User
+    from app.schema.user import UserInfo
+    from fastapi import HTTPException
+    from fastapi import status as http_status
+
+    user_id = current_user.get("id")
+    user = db.query(User).filter(User.id == user_id).first()
+    if not user:
+        raise HTTPException(
+            status_code=http_status.HTTP_404_NOT_FOUND,
+            detail="User not found"
+        )
+        
+    user_info = UserInfo.model_validate(user).model_dump()
+    return success_response(
+        status_code=http_status.HTTP_200_OK,
+        msg="Profile retrieved successfully",
+        data=user_info
+    )
